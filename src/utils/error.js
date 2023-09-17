@@ -13,3 +13,12 @@ export class UserAlreayExistsError extends Error {
         this.errorName = this.constructor.name;
     }
 }
+
+export class InvalidDataError extends Error {
+    constructor (code, message, fieldName) {
+        super(message);
+        this.code = code
+        this.errorName = this.constructor.name;
+        this.fieldName = fieldName
+    }
+}

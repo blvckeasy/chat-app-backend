@@ -1,13 +1,76 @@
 import { fetch, pool } from '../utils/postgres.js'
-import { UserNotFoundError } from '../utils/error.js'
+import {
+    InvalidDataError,
+    UserAlreayExistsError,
+    UserNotFoundError,
+} from '../utils/error.js';
 
-export async function login(username, password) {
-  const query = `
-      SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;
-    `
+export async function login(req, res, next) {
+    try {
+        const { username, password } = req.body
+        const query = `
+            SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;
+        `
 
-  const foundUser = await fetch(query, username, password)
-  
-  if (!foundUser) throw new UserNotFoundError(404, "user not found!");
-  
+        const foundUser = await fetch(query, username, password)
+        if (!foundUser) throw new UserNotFoundError(404, 'user not found!')
+
+        delete foundUser.password
+        return {
+            user: foundUser,
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
+export async function registration(req, res, next) {
+    try {
+        const { username, password, confirm_password } = req.body
+        console.log(username, password, confirm_password)
+
+        if (!username)
+            throw new InvalidDataError(400, 'username is required!', 'username')
+        if (!password)
+            throw new InvalidDataError(400, 'password is required!', 'password')
+        if (!confirm_password)
+            throw new InvalidDataError(
+                400,
+                'confirm_password is required!',
+                'confirm_password'
+            )
+
+        if (password.length < 5 && password.length > 32)
+            throw new InvalidDataError(
+                400,
+                'Password length must be [5; 32]',
+                'password'
+            )
+
+        if (password !== confirm_password)
+            throw new InvalidDataError(
+                400,
+                'Password and confirm password must be equal',
+                'confirm_password'
+            )
+
+        const foundUsernameQuery = `SELECT * FROM users WHERE username = $1;`
+        const foundUsername = await fetch(foundUsernameQuery, username)
+
+        if (foundUsername)
+            throw new UserAlreayExistsError(400, 'Username is already taken!')
+
+        const newUser = await fetch(
+            `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;`,
+            username,
+            password
+        )
+        
+        delete newUser.password
+        return {
+            user: newUser
+        }
+    } catch (error) {
+        next(error)
+    }
 }

@@ -1,9 +1,11 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-import { login } from './auth/auth.controller.js'
+import { login, registration } from './auth/auth.controller.js'
 import { sign, verify } from './utils/jwt.js';
+import multer from 'multer';
 
+const upload = multer({ dest: 'uploads/' })
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -31,10 +33,8 @@ app.get('/verify', (req, res) => {
   res.send(verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXN0IjoiaXRzIHdvcmsiLCJpYXQiOjE2OTQ4NzAxNDEsImV4cCI6MTcwMDA1NDE0MX0.WYtOH89ep6Bkpo2pFqmeflZwtTSPHPMVy5CORQFnA30"));
 });
 
-app.post("/login", (req, res, next) => {
-  const { username, password } = req.body;
-  login(username, password)
-});
+app.post("/login", login);
+app.post("/register", registration);
 
 server.listen(port, () => {
   console.log(`Listening on port ${port}`);
