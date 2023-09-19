@@ -1,11 +1,11 @@
 import { InvalidDataError, PaginationError, UserNotFoundError } from "../utils/error.js"
 import { fetch, fetchAll } from "../utils/postgres.js"
 import { PAGINATION } from "../../config.js";
+import MessageService from "./message.servise.js"
 
 export async function getMessages(req, res, next) {
     try {
-        const { friendUserId } = req.query;
-        const { page, limit } = { page: req.query.page || PAGINATION.page, limit: req.query.limit || PAGINATION.limit }
+        const { friendUserId, page, limit } = req.query;
         const { user } = req
 
         if (!user?.id) throw new InvalidDataError(400, "user not found!", "user")
@@ -13,15 +13,7 @@ export async function getMessages(req, res, next) {
         if (page <= 0) throw new PaginationError(400, "page must be valid. (page > 0)", "page");
         if (limit <= 0) throw new PaginationError(400, "limit must be valid, (limit > 0)", "limit");
 
-        const foundMessages = await fetchAll(`
-            SELECT * FROM MESSAGES 
-            WHERE 
-                from_user_id = $1 and to_user_id = $2 or
-                from_user_id = $2 and to_user_id = $1 and
-                DELETED_AT IS NOT NULL
-            LIMIT $3
-            OFFSET $4;
-        `, friendUserId, user.id, limit, page * limit - limit);
+        const foundMessages = await MessageService.selectAll(user.id, friendUserId, page, limit);
         
         return res.send({
             ok: true,
@@ -38,15 +30,8 @@ export async function postMessage(req, res, next) {
         const { user } = req;
 
         if (!user) throw new InvalidDataError(400, "user is not found!", 'user');
-        if (!toUserId) throw new InvalidDataError(400, "toUserId is require!", 'toUserId');
-        if (!message || typeof(message) !== "string" || !message.trim().length) throw new InvalidDataError(400, "message must be require and typeof stiring", "message");
-        if (user.id == toUserId) throw new InvalidDataError(400, "not allowed", "toUserId");
-
-        message = message.trim()
-        const foundUser = await fetch(`SELECT * FROM USERS WHERE id = $1;`, toUserId);
-        if (!foundUser) throw new UserNotFoundError(400, "your friend is not found!");
-
-        const newMessage = await fetch(`INSERT INTO messages (from_user_id, to_user_id, message) VALUES ($1, $2, $3) RETURNING *;`, user.id, toUserId, message);
+        
+        const newMessage = await MessageService.insert(user.id, toUserId, message);
         return res.send({
             ok: true,
             newMessage,
