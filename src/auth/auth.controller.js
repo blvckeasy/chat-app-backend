@@ -1,4 +1,4 @@
-import { fetch, pool } from '../utils/postgres.js'
+import { fetch } from '../utils/postgres.js'
 import {
     InvalidDataError,
     UserAlreayExistsError,
@@ -8,17 +8,15 @@ import {
 export async function login(req, res, next) {
     try {
         const { username, password } = req.body
-        const query = `
-            SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;
-        `
 
-        const foundUser = await fetch(query, username, password)
+        const foundUser = await fetch("SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;", username, password)
         if (!foundUser) throw new UserNotFoundError(404, 'user not found!')
 
         delete foundUser.password
-        return {
+        return res.send({
+            ok: true,
             user: foundUser,
-        }
+        })
     } catch (error) {
         next(error)
     }
@@ -54,9 +52,7 @@ export async function registration(req, res, next) {
                 'confirm_password'
             )
 
-        const foundUsernameQuery = `SELECT * FROM users WHERE username = $1;`
-        const foundUsername = await fetch(foundUsernameQuery, username)
-
+        const foundUsername = await fetch(`SELECT * FROM users WHERE username = $1;`, username)
         if (foundUsername)
             throw new UserAlreayExistsError(400, 'Username is already taken!')
 
@@ -67,9 +63,10 @@ export async function registration(req, res, next) {
         )
         
         delete newUser.password
-        return {
+        return res.send({
+            ok: true,
             user: newUser
-        }
+        })
     } catch (error) {
         next(error)
     }

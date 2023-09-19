@@ -22,3 +22,12 @@ export class InvalidDataError extends Error {
         this.fieldName = fieldName
     }
 }
+
+export class PaginationError extends Error {
+    constructor (code, message, fieldName) {
+        super(message);
+        this.code = code
+        this.errorName = this.constructor.name;
+        this.fieldName = fieldName
+    }
+}
