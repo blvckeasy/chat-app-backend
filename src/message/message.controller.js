@@ -17,7 +17,8 @@ export async function getMessages(req, res, next) {
             SELECT * FROM MESSAGES 
             WHERE 
                 from_user_id = $1 and to_user_id = $2 or
-                from_user_id = $2 and to_user_id = $1
+                from_user_id = $2 and to_user_id = $1 and
+                DELETED_AT IS NOT NULL
             LIMIT $3
             OFFSET $4;
         `, friendUserId, user.id, limit, page * limit - limit);

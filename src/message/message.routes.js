@@ -5,6 +5,6 @@ const MessageRouter = Express.Router()
 
 MessageRouter
     .get('/', getMessages)
-    .post('/', postMessage)
+    .post('/postMessage', postMessage)
 
 export default MessageRouter
