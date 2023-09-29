@@ -61,17 +61,8 @@ io.on('connection', async (socket) => {
       return socket.emit('error', new InvalidDataError(400, "to_user_id and message must be required!", "to_user_id"))
     }
 
-    if (typeof(message) !== "string" || !message.length || message.length > 512) {
-      return socket.emit('error', new InvalidDataError(400, "message must be string and length [1; 512]"))
-    }
-
+    const newMessage = await MessageService.postMessage(user.id, to_user_id, message);
     const toUser = await UserService.getUserWithId(to_user_id);
-    const fromUser = await UserService.getUserWithId(socket.user.id);
-
-    if (!toUser) return socket.emit('error', new UserNotFoundError(400, "to_user not found"));
-    if (!fromUser) return socket.emit('error', new Forbidden(405, "You are prohibited from this operation."))
-
-    const newMessage = await MessageService.postMessage(fromUser.id, toUser.id, message);
 
     socket.to(toUser.socket_id).emit("new:message", newMessage);
     socket.emit("new:message", newMessage);
