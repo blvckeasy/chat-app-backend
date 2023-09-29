@@ -47,6 +47,8 @@ export default class MessageService {
         const foundMessage = await this.getMessage(message_id);
         if (!foundMessage) throw new MessageNotFoundError(400, "message not found!");
         
+        if (!newMessage || typeof(newMessage) !== "string" || !newMessage.trim().length) throw new InvalidDataError(400, "message must be require and typeof stiring", "message");
+
         const updatedMessage = await fetch(`
             UPDATE messages SET message = $1 WHERE id = $2 RETURNING *;
         `, newMessage, message_id);

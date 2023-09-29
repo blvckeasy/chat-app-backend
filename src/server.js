@@ -56,42 +56,40 @@ io.on('connection', async (socket) => {
   await UserService.updateUserSocketId(user.id, socket.id)
 
   socket.on('post:message', async (data) => {
-    const { to_user_id, message } = data;
-    if (!(to_user_id && message)) {
-      return socket.emit('error', new InvalidDataError(400, "to_user_id and message must be required!", "to_user_id"))
+    try {
+      const { to_user_id, message } = data;
+      if (!(to_user_id && message)) throw new InvalidDataError(400, "to_user_id and message must be required!", "to_user_id");
+
+      const newMessage = await MessageService.postMessage(user.id, to_user_id, message);
+      const toUser = await UserService.getUserWithId(to_user_id);
+
+      socket.to(toUser.socket_id).emit("new:message", newMessage);
+      socket.emit("new:message", newMessage);
+    } catch (error) {
+      socket.emit('error', error);
     }
-
-    const newMessage = await MessageService.postMessage(user.id, to_user_id, message);
-    const toUser = await UserService.getUserWithId(to_user_id);
-
-    socket.to(toUser.socket_id).emit("new:message", newMessage);
-    socket.emit("new:message", newMessage);
   })
 
   socket.on('edit:message', async (data) => {
-    const { message_id, message } = data;
+    try {
+      const { message_id, message } = data;
 
-    if (!message_id) {
-      return socket.emit('error', new InvalidDataError(400, "message_id is required!", "message_id"));
-    }
-    if (typeof(message) !== "string" || !message.length || message.length > 512) {
-      return socket.emit('error', new InvalidDataError(400, "message must be string and length [1; 512]"))
-    }
-    
-    const foundMessage = await MessageService.getMessage(message_id);
-    if (!foundMessage) {
-      return socket.emit('error', new MessageNotFoundError(400, "Message not found!"));
-    }
+      if (!message_id) throw new InvalidDataError(400, "message_id is required!", "message_id");
+      
+      const foundMessage = await MessageService.getMessage(message_id);
+      if (!foundMessage) throw new MessageNotFoundError(400, "Message not found!");
 
-    if (foundMessage.from_user_id != socket.user.id) {
-      return socket.emit('error', new Forbidden(500, "you are prohibited from performing this operation."));
-    }
+      if (foundMessage.from_user_id != user.id) throw new Forbidden(500, "you are prohibited from performing this operation.");
 
-    const updatedMessage = await MessageService.updateMessage(message_id, message);
-    const toUser = await UserService.getUserWithId(updatedMessage.to_user_id);
-    
-    socket.to(toUser.socket_id).emit("message:updated", updatedMessage);
-    socket.emit('message:updated', updatedMessage);
+      const updatedMessage = await MessageService.updateMessage(message_id, message);
+      const toUser = await UserService.getUserWithId(updatedMessage.to_user_id);
+      
+      socket.to(toUser.socket_id).emit("message:updated", updatedMessage);
+      socket.emit('message:updated', updatedMessage);
+    } catch (error) {
+      console.log(error);
+      socket.emit('error', error);
+    }
   })
 
   socket.on('delete:message', async (data) => {
