@@ -55,3 +55,11 @@ export class Forbidden extends Error {
         this.errorName = this.constructor.name;
     }
 }
+
+export class MessageNotFoundError extends Error {
+    constructor (code, message) {
+        super(message);
+        this.code = code;
+        this.errorName = this.constructor.name;
+    }
+}

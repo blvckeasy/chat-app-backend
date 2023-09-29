@@ -1,4 +1,4 @@
-import { InvalidDataError, UserNotFoundError } from "../utils/error.js"
+import { InvalidDataError, MessageNotFoundError, UserNotFoundError } from "../utils/error.js"
 import { fetchAll, fetch } from "../utils/postgres.js"
 import { PAGINATION } from "../../config.js"
 
@@ -18,6 +18,13 @@ export default class MessageService {
         return foundMessages
     }
 
+    static async getMessage(message_id) {
+        const foundMessage = await fetch(`
+            SELECT * FROM MESSAGES WHERE id = $1 and deleted_at IS NULL;
+        `, message_id);
+        return foundMessage;
+    }
+
     static async postMessage (fromUserId, toUserId, message) {
         if (!toUserId) throw new InvalidDataError(400, "toUserId is require!", 'toUserId');
         if (!fromUserId) throw new InvalidDataError(400, "fromUserId is require!", 'fromUserId');
@@ -30,5 +37,16 @@ export default class MessageService {
 
         const newMessage = await fetch(`INSERT INTO messages (from_user_id, to_user_id, message) VALUES ($1, $2, $3) RETURNING *;`, fromUserId, toUserId, message.trim());
         return newMessage
+    }
+
+    static async updateMessage (message_id, newMessage) {
+        const foundMessage = await this.getMessage(message_id);
+        if (!foundMessage) throw new MessageNotFoundError(400, "message not found!");
+        
+        const updatedMessage = await fetch(`
+            UPDATE messages SET message = $1 WHERE id = $2 RETURNING *;
+        `, newMessage, message_id);
+
+        return updatedMessage;
     }
 }

@@ -8,7 +8,7 @@ import multer from 'multer';
 import AuthRouter from './auth/auth.routes.js'
 import MessageRouter from './message/message.routes.js';
 import { UserService } from './user/user.service.js'
-import { Forbidden, InvalidDataError, UserAlreayExistsError, UserNotFoundError } from './utils/error.js'
+import { Forbidden, InvalidDataError, MessageNotFoundError, UserAlreayExistsError, UserNotFoundError } from './utils/error.js'
 import MessageService from './message/message.servise.js'
 
 const upload = multer({ dest: 'uploads/' })
@@ -55,7 +55,7 @@ io.on('connection', async (socket) => {
   
   await UserService.updateUserSocketId(user.id, socket.id)
 
-  socket.on('new:message', async (data) => {
+  socket.on('post:message', async (data) => {
     const { to_user_id, message } = data;
     if (!(to_user_id && message)) {
       return socket.emit('error', new InvalidDataError(400, "to_user_id and message must be required!", "to_user_id"))
@@ -75,6 +75,36 @@ io.on('connection', async (socket) => {
 
     socket.to(toUser.socket_id).emit("new:message", newMessage);
     socket.emit("new:message", newMessage);
+  })
+
+  socket.on('edit:message', async (data) => {
+    const { message_id, message } = data;
+
+    if (!message_id) {
+      return socket.emit('error', new InvalidDataError(400, "message_id is required!", "message_id"));
+    }
+    if (typeof(message) !== "string" || !message.length || message.length > 512) {
+      return socket.emit('error', new InvalidDataError(400, "message must be string and length [1; 512]"))
+    }
+    
+    const foundMessage = await MessageService.getMessage(message_id);
+    if (!foundMessage) {
+      return socket.emit('error', new MessageNotFoundError(400, "Message not found!"));
+    }
+
+    if (foundMessage.from_user_id != socket.user.id) {
+      return socket.emit('error', new Forbidden(500, "you are prohibited from performing this operation."));
+    }
+
+    const updatedMessage = await MessageService.updateMessage(message_id, message);
+    const toUser = await UserService.getUserWithId(updatedMessage.to_user_id);
+    
+    socket.to(toUser.socket_id).emit("message:updated", updatedMessage);
+    socket.emit('message:updated', updatedMessage);
+  })
+
+  socket.on('delete:message', async (data) => {
+    // some code ...
   })
   
   socket.on('disconnect', () => {
