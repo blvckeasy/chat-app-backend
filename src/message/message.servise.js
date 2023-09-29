@@ -1,6 +1,6 @@
-import { PAGINATION } from "../../config.js"
 import { InvalidDataError, UserNotFoundError } from "../utils/error.js"
-import { fetchAll } from "../utils/postgres.js"
+import { fetchAll, fetch } from "../utils/postgres.js"
+import { PAGINATION } from "../../config.js"
 
 
 export default class MessageService {
@@ -18,7 +18,7 @@ export default class MessageService {
         return foundMessages
     }
 
-    static async insert (fromUserId, toUserId, message) {
+    static async postMessage (fromUserId, toUserId, message) {
         if (!toUserId) throw new InvalidDataError(400, "toUserId is require!", 'toUserId');
         if (!fromUserId) throw new InvalidDataError(400, "fromUserId is require!", 'fromUserId');
         if (fromUserId == toUserId) throw new InvalidDataError(400, "not allowed", "toUserId");

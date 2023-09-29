@@ -1,6 +1,4 @@
 import { InvalidDataError, PaginationError, UserNotFoundError } from "../utils/error.js"
-import { fetch, fetchAll } from "../utils/postgres.js"
-import { PAGINATION } from "../../config.js";
 import MessageService from "./message.servise.js"
 
 export async function getMessages(req, res, next) {

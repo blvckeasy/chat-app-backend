@@ -31,3 +31,27 @@ export class PaginationError extends Error {
         this.fieldName = fieldName
     }
 }
+
+export class TokenIsInvalid extends Error {
+    constructor (code, message) {
+        super(message);
+        this.code = code
+        this.errorName = this.constructor.name;
+    }
+}
+
+export class InternalServerError extends Error {
+    constructor (code, message) {
+        super(message);
+        this.code = code
+        this.errorName = this.constructor.name;
+    }
+}
+
+export class Forbidden extends Error {
+    constructor (code, message) {
+        super(message);
+        this.code = code
+        this.errorName = this.constructor.name;
+    }
+}

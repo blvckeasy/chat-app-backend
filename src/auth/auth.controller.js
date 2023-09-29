@@ -4,6 +4,7 @@ import {
     UserAlreayExistsError,
     UserNotFoundError,
 } from '../utils/error.js';
+import JWT from '../utils/jwt.js'
 
 export async function login(req, res, next) {
     try {
@@ -12,10 +13,15 @@ export async function login(req, res, next) {
         const foundUser = await fetch("SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;", username, password)
         if (!foundUser) throw new UserNotFoundError(404, 'user not found!')
 
-        delete foundUser.password
+        delete foundUser.password;
+        delete foundUser.socket_id;
+        
         return res.send({
             ok: true,
             user: foundUser,
+            token: {
+                access_token: JWT.sign(foundUser)
+            }
         })
     } catch (error) {
         next(error)
@@ -62,10 +68,15 @@ export async function registration(req, res, next) {
             password
         )
         
-        delete newUser.password
+        delete newUser.password;
+        delete newUser.socket_id;
+
         return res.send({
             ok: true,
-            user: newUser
+            user: newUser,
+            token: {
+                access_token: JWT.sign(newUser)
+            }
         })
     } catch (error) {
         next(error)
