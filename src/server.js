@@ -40,8 +40,12 @@ io.use(async function (socket, next) {
   try {
     const token = socket.handshake.query?.token
     if (!token) throw new InvalidDataError(400, "Token is require!");
-
+    
     socket.user = JWT.verify(token)
+    if (socket.user) {
+      socket.user.socket_id = socket.id;
+    }
+
     next()
   } catch (error) {
     next(error)
@@ -63,8 +67,7 @@ io.on('connection', async (socket) => {
       const newMessage = await MessageService.postMessage(user.id, to_user_id, message);
       const toUser = await UserService.getUserWithId(to_user_id);
 
-      socket.to(toUser.socket_id).emit("new:message", newMessage);
-      socket.emit("new:message", newMessage);
+      socket.to([toUser.socket_id, user.socket_id]).emit("new:message", newMessage);
     } catch (error) {
       socket.emit('error', error);
     }
@@ -79,13 +82,13 @@ io.on('connection', async (socket) => {
       const foundMessage = await MessageService.getMessage(message_id);
       if (!foundMessage) throw new MessageNotFoundError(400, "Message not found!");
 
-      if (foundMessage.from_user_id != user.id) throw new Forbidden(500, "you are prohibited from performing this operation.");
+      if (foundMessage?.from_user_id != user.id) throw new Forbidden(500, "you are prohibited from performing this operation.");
 
       const updatedMessage = await MessageService.updateMessage(message_id, message);
       const toUser = await UserService.getUserWithId(updatedMessage.to_user_id);
       
-      socket.to(toUser.socket_id).emit("message:updated", updatedMessage);
-      socket.emit('message:updated', updatedMessage);
+      console.log(user.socket_id);
+      socket.to([toUser.socket_id, user.socket_id]).emit("message:updated", updatedMessage);
     } catch (error) {
       console.log(error);
       socket.emit('error', error);
@@ -93,20 +96,26 @@ io.on('connection', async (socket) => {
   })
 
   socket.on('delete:message', async (data) => {
-    // some code ...
+    try {
+      const { message_id } = data;
+      const foundMessage = await MessageService.getMessage(message_id);
+      
+      if (!foundMessage) throw new MessageNotFoundError("message not found!");
+      if (foundMessage?.from_user_id != user.id) throw new Forbidden(500, "you are prohibited from performing this operation.");
+
+      const deletedMessage = await MessageService.deleteMessage(message_id);
+      const toUser = await UserService.getUserWithId(deletedMessage.to_user_id);
+
+      socket.to([toUser.socket_id, user.socket_id]).emit('message:deleted', deletedMessage);
+    } catch (error) {
+      console.log(error);
+      socket.emit('error', error);
+    }
   })
   
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
-});
-
-app.get('/:id', async (req, res) => {
-  res.send(JWT.sign(await UserService.getUserWithId('1')));
-});
-
-app.get('/verify', (req, res) => {
-  res.send(JWT.verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXN0IjoiaXRzIHdvcmsiLCJpYXQiOjE2OTQ4NzAxNDEsImV4cCI6MTcwMDA1NDE0MX0.WYtOH89ep6Bkpo2pFqmeflZwtTSPHPMVy5CORQFnA30"));
 });
 
 app.use((err, req, res, next) => {

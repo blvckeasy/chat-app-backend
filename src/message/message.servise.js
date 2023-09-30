@@ -20,6 +20,8 @@ export default class MessageService {
     }
 
     static async getMessage(message_id) {
+        if (!message_id) throw new InvalidDataError(404, "Message_id is require!", "message_id");
+    
         const foundMessage = await fetch(`
             SELECT * FROM MESSAGES WHERE id = $1 and deleted_at IS NULL;
         `, message_id);
@@ -50,9 +52,20 @@ export default class MessageService {
         if (!newMessage || typeof(newMessage) !== "string" || !newMessage.trim().length) throw new InvalidDataError(400, "message must be require and typeof stiring", "message");
 
         const updatedMessage = await fetch(`
-            UPDATE messages SET message = $1 WHERE id = $2 RETURNING *;
+            UPDATE messages SET message = $1 WHERE id = $2 and deleted_at IS NULL RETURNING *;
         `, newMessage, message_id);
 
         return updatedMessage;
+    }
+
+    static async deleteMessage(message_id) {
+        const foundMessage = await this.getMessage(message_id);
+        if (!foundMessage) throw new MessageNotFoundError(404, "message not found!");
+
+        const deletedMessage = await fetch(`
+            UPDATE messages SET deleted_at = NOW() WHERE id = $1 RETURNING *;
+        `, message_id);
+        
+        return deletedMessage;
     }
 }
