@@ -8,7 +8,7 @@ import multer from 'multer';
 import AuthRouter from './auth/auth.routes.js'
 import MessageRouter from './message/message.routes.js';
 import { UserService } from './user/user.service.js'
-import { Forbidden, InvalidDataError, MessageNotFoundError, UserAlreayExistsError, UserNotFoundError } from './utils/error.js'
+import { Forbidden, InvalidDataError, MessageNotFoundError } from './utils/error.js'
 import MessageService from './message/message.servise.js'
 
 const upload = multer({ dest: 'uploads/' })
@@ -67,7 +67,8 @@ io.on('connection', async (socket) => {
       const newMessage = await MessageService.postMessage(user.id, to_user_id, message);
       const toUser = await UserService.getUserWithId(to_user_id);
 
-      socket.to([toUser.socket_id, user.socket_id]).emit("new:message", newMessage);
+      socket.to(toUser.socket_id).emit("new:message", newMessage);
+      socket.emit("new:message", newMessage);
     } catch (error) {
       socket.emit('error', error);
     }
@@ -87,8 +88,8 @@ io.on('connection', async (socket) => {
       const updatedMessage = await MessageService.updateMessage(message_id, message);
       const toUser = await UserService.getUserWithId(updatedMessage.to_user_id);
       
-      console.log(user.socket_id);
-      socket.to([toUser.socket_id, user.socket_id]).emit("message:updated", updatedMessage);
+      socket.to(toUser.socket_id).emit("message:updated", updatedMessage);
+      socket.emit("message:updated", updatedMessage);
     } catch (error) {
       console.log(error);
       socket.emit('error', error);
@@ -106,7 +107,8 @@ io.on('connection', async (socket) => {
       const deletedMessage = await MessageService.deleteMessage(message_id);
       const toUser = await UserService.getUserWithId(deletedMessage.to_user_id);
 
-      socket.to([toUser.socket_id, user.socket_id]).emit('message:deleted', deletedMessage);
+      socket.to(toUser.socket_id).emit('message:deleted', deletedMessage);
+      socket.emit('message:deleted', deletedMessage);
     } catch (error) {
       console.log(error);
       socket.emit('error', error);
