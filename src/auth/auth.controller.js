@@ -10,7 +10,7 @@ export async function login(req, res, next) {
     try {
         const { username, password } = req.body
 
-        const foundUser = await fetch("SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;", username, password)
+        const foundUser = await fetch(`SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;`, username, password);
         if (!foundUser) throw new UserNotFoundError(404, 'user not found!')
 
         delete foundUser.password;
