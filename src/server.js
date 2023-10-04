@@ -25,6 +25,12 @@ app.use("/auth", AuthRouter)
 app.use("/messages", MessageRouter)
 app.use("/user", UserRouter)
 
+app.get("/", (req, res) => {
+  return res.send({
+    author: "blvckeasy",
+    repo: "https://github.com/blvckeasy/"
+  })
+})
 
 io.use(socketMiddleware)
 io.on('connection', SocketConnection);
