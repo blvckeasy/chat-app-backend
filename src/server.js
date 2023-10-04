@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import Multer from 'multer';
+import Path from 'path';
 
 import AuthRouter from './auth/auth.routes.js'
 import MessageRouter from './message/message.routes.js';
@@ -20,8 +21,8 @@ const io = new Server(server);
 const port = process.env.PORT || 8080;
 const upload = Multer({ limits: 5 * 1000 * 1000 })
 
+app.use(express.static(Path.join(process.cwd(), "uploads")))
 app.use(express.json())
-
 app.use("/auth", AuthRouter)
 app.use("/messages", MessageRouter)
 // app.use("/user", UserRouter)
