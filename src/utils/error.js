@@ -11,6 +11,7 @@ export class UserAlreayExistsError extends Error {
         super(message);
         this.code = code;
         this.errorName = this.constructor.name;
+        this.message = message
     }
 }
 

@@ -4,7 +4,7 @@ CREATE DATABASE chatapp;
 DROP TABLE users CASCADE;
 CREATE TABLE IF NOT EXISTS users (
     ID SERIAL PRIMARY KEY,
-    PROFILE_IMG_URL VARCHAR,
+    PROFILE_IMG_URL VARCHAR(256),
     FULL_NAME VARCHAR(256),
     USERNAME VARCHAR(64) UNIQUE NOT NULL,
     PASSWORD VARCHAR(64) NOT NULL,
@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS statuses (
 );
 
 INSERT INTO users (username, password) values ('blvckeasy', 'islom1234');
+INSERT INTO users (username, password) values ('ivan', 'gryaz123');
 
 INSERT INTO messages (FROM_USER_ID, TO_USER_ID, MESSAGE) VALUES (1, 2, 'HELLO');
 INSERT INTO messages (FROM_USER_ID, TO_USER_ID, MESSAGE) VALUES (2, 1, 'HI');

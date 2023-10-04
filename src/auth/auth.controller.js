@@ -62,14 +62,11 @@ export async function registration(req, res, next) {
         if (foundUsername)
             throw new UserAlreayExistsError(400, 'Username is already taken!')
 
-        const newUser = await fetch(
+        const { socket_id, profile_img_url, password: pass, ...newUser } = Object.assign({}, await fetch(
             `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;`,
             username,
             password
-        )
-        
-        delete newUser.password;
-        delete newUser.socket_id;
+        ))
 
         return res.send({
             ok: true,
