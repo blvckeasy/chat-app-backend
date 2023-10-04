@@ -1,12 +1,8 @@
 import pg from 'pg'
-import { PG_USER, PG_PASSWORD, PG_DATABASE, PG_PORT, PG_HOST } from '../../config.js'
+import { PG_CONNECTION_STRING } from '../../config.js'
 
 export const pool = new pg.Pool({
-	user: PG_USER,
-	password: PG_PASSWORD,
-	database: PG_DATABASE,
-	port: PG_PORT,
-	host: PG_HOST,
+	connectionString: PG_CONNECTION_STRING
 })
 
 export async function fetch (query, ...params) {

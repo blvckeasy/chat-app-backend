@@ -24,6 +24,7 @@ app.use(express.json())
 
 app.use("/auth", AuthRouter)
 app.use("/messages", MessageRouter)
+// app.use("/user", UserRouter)
 
 app.post("/profile/image", upload.single('image'), async (req, res, next) => {
   try {
