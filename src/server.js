@@ -25,7 +25,7 @@ app.use("/auth", AuthRouter)
 app.use("/messages", MessageRouter)
 app.use("/user", UserRouter)
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   return res.send({
     author: "blvckeasy",
     repo: "https://github.com/blvckeasy/"
@@ -36,8 +36,6 @@ io.use(socketMiddleware)
 io.on('connection', SocketConnection);
 
 app.use((err, req, res, next) => {
-  console.log(err);
-  console.log(err instanceof InternalServerError);
   return res.send({
     ok: false,
     error: err

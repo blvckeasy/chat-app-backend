@@ -1,5 +1,5 @@
 import { UserNotFoundError } from "../utils/error.js"
-import { fetch } from "../utils/postgres.js"
+import { fetch, fetchAll } from "../utils/postgres.js"
 
 export class UserService { 
     static async getUserWithId (userId) {
@@ -13,5 +13,16 @@ export class UserService {
         
         const updatedUser = await fetch(`UPDATE users SET socket_id = $1 WHERE id = $2 and deleted_at IS NULL RETURNING *;`, socketId, userId)
         return updatedUser
+    }
+
+    static async getUsers () {
+        const users = await fetchAll(`
+            SELECT * FROM users WHERE deleted_at IS NULL ORDER BY id;
+        `)
+
+        return users.map((user => {
+            var {password, created_at, updated_at, deleted_at, socket_id, ...user} = Object.assign({}, user)
+            return user
+        }))
     }
 }
