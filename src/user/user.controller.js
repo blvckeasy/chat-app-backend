@@ -1,9 +1,10 @@
-import { TokenIsInvalid } from "../utils/error.js";
+import { InvalidDataError, TokenIsInvalid } from "../utils/error.js";
 import { writeFile } from "../utils/file.js";
 import { generateFileName } from "../utils/generate.js";
 import JWT from "../utils/jwt.js";
 import { fetchAll } from "../utils/postgres.js"
 import { UserService } from "./user.service.js";
+
 
 
 export async function uploadProfileImage (req, res, next) {

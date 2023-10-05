@@ -10,11 +10,8 @@ export async function login(req, res, next) {
     try {
         const { username, password } = req.body
 
-        const foundUser = await fetch(`SELECT * FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;`, username, password);
+        const foundUser = await fetch(`SELECT id, profile_img_url, full_name, username, bio FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;`, username, password);
         if (!foundUser) throw new UserNotFoundError(404, 'user not found!')
-
-        delete foundUser.password;
-        delete foundUser.socket_id;
         
         return res.send({
             ok: true,
@@ -62,11 +59,11 @@ export async function registration(req, res, next) {
         if (foundUsername)
             throw new UserAlreayExistsError(400, 'Username is already taken!')
 
-        const { socket_id, profile_img_url, password: pass, ...newUser } = Object.assign({}, await fetch(
-            `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;`,
+        const newUser = await fetch(
+            `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, profile_img_url, full_name, username, bio;`,
             username,
             password
-        ))
+        )
 
         return res.send({
             ok: true,
