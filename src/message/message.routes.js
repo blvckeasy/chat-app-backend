@@ -3,8 +3,10 @@ import { getMessages, postMessage } from './message.controller.js'
 
 const MessageRouter = Express.Router()
 
-MessageRouter
-    .get('/', getMessages) //  /messages?friendUserId=<id>&page=<int>&limit=<int>
-    .post('/postMessage', postMessage)
+MessageRouter.get('/', getMessages) //  /messages?friendUserId=<id>&page=<int>&limit=<int>
+MessageRouter.post('/postMessage', postMessage)
 
-export default MessageRouter 
+export default {
+    path: '/messages',
+    router: MessageRouter
+}

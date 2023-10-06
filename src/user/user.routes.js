@@ -5,10 +5,11 @@ import { getUsers, uploadProfileImage } from './user.controller.js'
 const upload = Multer({ limits: 5 * 1000 * 1000 })
 const UserRouter = Router()
 
-UserRouter
-    .get("/all", getUsers)
-    .post("/profile/image", upload.single('image'), uploadProfileImage)
+UserRouter.get("/all", getUsers)
+UserRouter.post("/profile/image", upload.single('image'), uploadProfileImage)
 
 
-
-export default UserRouter
+export default {
+    path: '/user',
+    router: UserRouter
+}

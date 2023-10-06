@@ -3,8 +3,10 @@ import UserStatusController from './user-status.controller.js';
 
 const UserStatusRouter = Router()
 
-UserStatusRouter
-    .get('/last/:userID', UserStatusController.getUserLastStatus)
-    .get('/mystatus', UserStatusController.getUserAllStatus)
+UserStatusRouter.get('/last/:userID', UserStatusController.getUserLastStatus)
+UserStatusRouter.get('/mystatus', UserStatusController.getUserAllStatus)
 
-export default UserStatusRouter;
+export default {
+    path: '/user-status',
+    router: UserStatusRouter
+}
