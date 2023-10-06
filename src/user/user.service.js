@@ -17,12 +17,9 @@ export class UserService {
 
     static async getUsers () {
         const users = await fetchAll(`
-            SELECT * FROM users WHERE deleted_at IS NULL ORDER BY id;
+            SELECT id, profile_img_url, full_name, username, bio FROM users WHERE deleted_at IS NULL ORDER BY id;
         `)
 
-        return users.map((user => {
-            var {password, created_at, updated_at, deleted_at, socket_id, ...user} = Object.assign({}, user)
-            return user
-        }))
+        return users;
     }
 }

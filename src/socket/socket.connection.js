@@ -1,3 +1,4 @@
+import UserStatusService from '../user-status/user-status.service.js';
 import { UserService } from '../user/user.service.js'
 import { InternalServerError } from '../utils/error.js'
 import { SocketMessageRoutes } from './socket.message.js'
@@ -5,12 +6,13 @@ import { SocketMessageRoutes } from './socket.message.js'
 
 export default async function SocketConnection(socket) {
     console.log('user connected')
-    // console.log(socket.user);
+    
 
-    const { user } = socket
+    const { user } = socket;
     if (!user) throw new InternalServerError(400, 'user not found!')
 
-    await UserService.updateUserSocketId(user.id, socket.id)
+    await UserService.updateUserSocketId(user.id, socket.id);
+    await UserStatusService.insertUserStatus(user.id, "ONLINE");
 
     socket.on("test", async () => {
         socket.emit("working", "ok ishladi");
@@ -28,7 +30,8 @@ export default async function SocketConnection(socket) {
         SocketMessageRoutes.deleteMessage.call(null, socket, data)
     )
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
+        await UserStatusService.insertUserStatus(user.id, "OFFLINE");
         console.log('user disconnected')
     })
 }

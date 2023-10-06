@@ -8,9 +8,7 @@ export default async function middleware (socket, next) {
       if (!token) throw new InvalidDataError(400, "Token is require!");
       
       socket.user = JWT.verify(token)
-      if (socket.user) {
-        socket.user.socket_id = socket.id;
-      }
+      socket.user.socket_id = socket.id;
   
       next()
     } catch (error) {

@@ -1,5 +1,9 @@
 import dotenv from 'dotenv'
-dotenv.config()
+dotenv.config({
+  path: `.${process.env.NODE_ENV}.env`
+})
+
+// console.log(`.${process.env.NODE_ENV}.env`)
 
 export const PORT = process.env.PORT || 4000
 export const TOKEN_TIME = '60d'
@@ -11,7 +15,7 @@ export const PG_PASSWORD = process.env.PG_PASSWORD || "1029";
 export const PG_DATABASE = process.env.PG_DATABASE || "chatapp";
 export const PG_PORT = process.env.PG_PORT || 5432;
 export const PG_HOST = process.env.PG_HOST || "localhost"
-export const PG_CONNECTION_STRING = process.env.PG_CONNECTION_STRING || "postgres://jxeewdvk:oAoypOQRmHLsxgFqe22ECE5nvzpB3wC_@rain.db.elephantsql.com/jxeewdvk"
+export const PG_CONNECTION_STRING = process.env.PG_CONNECTION_STRING
 
 export const PAGINATION = {
   page: 1,
