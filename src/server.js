@@ -1,12 +1,11 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-import Path from 'path';
-import Cors from 'cors';
 
 import socketMiddleware from './socket/socket.middleware.js'
 import SocketConnection from './socket/socket.connection.js'
 import Routes from './routes.js';
+import apiMiddleware from './apiMiddleware.js';
 
 async function bootstrap() {
   const app = express();
@@ -14,10 +13,7 @@ async function bootstrap() {
   const io = new Server(server);
   const port = process.env.PORT || 8080;
 
-  app.use(Cors("*"))
-  app.use(express.static(Path.join(process.cwd(), "uploads")))
-  app.use(express.json())
-
+  await apiMiddleware(app);
   await Routes(app);
 
   app.get("/", (_, res) => {

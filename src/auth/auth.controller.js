@@ -10,7 +10,9 @@ export async function login(req, res, next) {
     try {
         const { username, password } = req.body
 
-        const foundUser = await fetch(`SELECT id, profile_img_url, full_name, username, bio FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;`, username, password);
+        const foundUser = await fetch(`
+            SELECT id, profile_img_url, full_name, username, bio FROM USERS WHERE USERNAME = $1 and PASSWORD = $2;
+        `, username, password);
         if (!foundUser) throw new UserNotFoundError(404, 'user not found!')
         
         return res.send({
@@ -27,43 +29,23 @@ export async function login(req, res, next) {
 
 export async function registration(req, res, next) {
     try {
-        const { username, password, confirm_password } = req.body
-        console.log(username, password, confirm_password)
+        const { username, password, confirm_password } = req.body;
+        console.log(username, password, confirm_password);
 
-        if (!username)
-            throw new InvalidDataError(400, 'username is required!', 'username')
-        if (!password)
-            throw new InvalidDataError(400, 'password is required!', 'password')
-        if (!confirm_password)
-            throw new InvalidDataError(
-                400,
-                'confirm_password is required!',
-                'confirm_password'
-            )
+        if (!username) throw new InvalidDataError(400, 'username is required!', 'username');
+        if (!password) throw new InvalidDataError(400, 'password is required!', 'password');
+        if (!confirm_password) throw new InvalidDataError(400, 'confirm_password is required!', 'confirm_password');
 
-        if (password.length < 5 && password.length > 32)
-            throw new InvalidDataError(
-                400,
-                'Password length must be [5; 32]',
-                'password'
-            )
+        if (password.length < 5 && password.length > 32) throw new InvalidDataError( 400,'Password length must be [5; 32]','password');
 
-        if (password !== confirm_password)
-            throw new InvalidDataError(
-                400,
-                'Password and confirm password must be equal',
-                'confirm_password'
-            )
+        if (password !== confirm_password) throw new InvalidDataError(400, 'Password and confirm password must be equal', 'confirm_password');
 
-        const foundUsername = await fetch(`SELECT * FROM users WHERE username = $1;`, username)
-        if (foundUsername)
-            throw new UserAlreayExistsError(400, 'Username is already taken!')
+        const foundUsername = await fetch(`SELECT * FROM users WHERE username = $1;`, username);
+        if (foundUsername) throw new UserAlreayExistsError(400, 'Username is already taken!');
 
-        const newUser = await fetch(
-            `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, profile_img_url, full_name, username, bio;`,
-            username,
-            password
-        )
+        const newUser = await fetch(`
+            INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, profile_img_url, full_name, username, bio;
+        `, username, password);
 
         return res.send({
             ok: true,

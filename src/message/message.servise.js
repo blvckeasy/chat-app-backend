@@ -39,9 +39,12 @@ export default class MessageService {
         if (!toUser) throw UserNotFoundError(400, "toUser not found");
         if (!fromUser) throw UserNotFoundError(400, "fromUser not found");
         
-        if (!message || typeof(message) !== "string" || !message.trim().length) throw new InvalidDataError(400, "message must be require and typeof stiring", "message");
+        if (!message || typeof(message) !== "string" || !message.trim().length) 
+            throw new InvalidDataError(400, "message must be require and typeof stiring", "message");
 
-        const newMessage = await fetch(`INSERT INTO messages (from_user_id, to_user_id, message) VALUES ($1, $2, $3) RETURNING *;`, fromUserId, toUserId, message.trim());
+        const newMessage = await fetch(`
+            INSERT INTO messages (from_user_id, to_user_id, message) VALUES ($1, $2, $3) RETURNING *;
+        `, fromUserId, toUserId, message.trim());
         return newMessage
     }
 
@@ -49,7 +52,8 @@ export default class MessageService {
         const foundMessage = await this.getMessage(message_id);
         if (!foundMessage) throw new MessageNotFoundError(400, "message not found!");
         
-        if (!newMessage || typeof(newMessage) !== "string" || !newMessage.trim().length) throw new InvalidDataError(400, "message must be require and typeof stiring", "message");
+        if (!newMessage || typeof(newMessage) !== "string" || !newMessage.trim().length) 
+            throw new InvalidDataError(400, "message must be require and typeof stiring", "message");
 
         const updatedMessage = await fetch(`
             UPDATE messages SET message = $1 WHERE id = $2 and deleted_at IS NULL RETURNING *;

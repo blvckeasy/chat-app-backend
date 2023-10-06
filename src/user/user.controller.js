@@ -7,7 +7,6 @@ import { fetchAll } from "../utils/postgres.js"
 import { UserService } from "./user.service.js";
 
 
-
 export async function uploadProfileImage (req, res, next) {
   try {
     const { token } = req.headers;
