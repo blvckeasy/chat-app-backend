@@ -18,7 +18,7 @@ export class UserService {
     static async getUsers () {
         const users = await fetchAll(`
             SELECT id, profile_img_url, full_name, username, bio FROM users WHERE deleted_at IS NULL ORDER BY id;
-        `)
+        `) 
 
         return users;
     }

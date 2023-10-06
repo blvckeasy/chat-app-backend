@@ -5,12 +5,11 @@ import Path from 'path';
 import Cors from 'cors';
 
 import AuthRouter from './auth/auth.routes.js'
+import UserRouter from './user/user.routes.js';
 import MessageRouter from './message/message.routes.js';
-
+import UserStatusRouter from './user-status/user-status.routes.js';
 import socketMiddleware from './socket/socket.middleware.js'
 import SocketConnection from './socket/socket.connection.js'
-import UserRouter from './user/user.routes.js';
-import UserStatusRouter from './user-status/user-status.routes.js';
 
 const app = express();
 const server = http.createServer(app);

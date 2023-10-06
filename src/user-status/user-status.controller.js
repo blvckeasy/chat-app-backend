@@ -21,7 +21,7 @@ export default class UserStatusController {
     static async getUserAllStatus (req, res, next) {
         try {
             const { token } = req.headers;
-            const { page, limit } = req.query;
+            // const { toDate, endDate } = req.query; // in the future added pagination for statistics
 
             if (!token) throw new InvalidDataError(400, "Token is not defined!", "token");
 

@@ -5,14 +5,12 @@ import { SocketMessageRoutes } from './socket.message.js'
 
 
 export default async function SocketConnection(socket) {
-    console.log('user connected')
-    
-
     const { user } = socket;
     if (!user) throw new InternalServerError(400, 'user not found!')
 
     await UserService.updateUserSocketId(user.id, socket.id);
     await UserStatusService.insertUserStatus(user.id, "ONLINE");
+    socket.broadcast.emit('user-connected', user);
 
     socket.on("test", async () => {
         socket.emit("working", "ok ishladi");
@@ -32,6 +30,6 @@ export default async function SocketConnection(socket) {
 
     socket.on('disconnect', async () => {
         await UserStatusService.insertUserStatus(user.id, "OFFLINE");
-        console.log('user disconnected')
+        socket.broadcast.emit('user-disconnected', user);
     })
 }
