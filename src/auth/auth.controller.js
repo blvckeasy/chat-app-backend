@@ -30,7 +30,6 @@ export async function login(req, res, next) {
 export async function registration(req, res, next) {
     try {
         const { username, password, confirm_password } = req.body;
-        console.log(username, password, confirm_password);
 
         if (!username) throw new InvalidDataError(400, 'username is required!', 'username');
         if (!password) throw new InvalidDataError(400, 'password is required!', 'password');

@@ -2,10 +2,13 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 
+
 import socketMiddleware from './socket/socket.middleware.js'
 import SocketConnection from './socket/socket.connection.js'
 import Routes from './routes.js';
-import apiMiddleware from './apiMiddleware.js';
+import { ErrorHandlerMiddleware, apiMiddlewares } from './apiMiddleware.js';
+
+
 
 async function bootstrap() {
   const app = express();
@@ -13,7 +16,7 @@ async function bootstrap() {
   const io = new Server(server);
   const port = process.env.PORT || 8080;
 
-  await apiMiddleware(app);
+  await apiMiddlewares(app);
   await Routes(app);
 
   app.get("/", (_, res) => {
@@ -26,13 +29,7 @@ async function bootstrap() {
   io.use(socketMiddleware)
   io.on('connection', SocketConnection);
 
-  app.use((err, req, res, next) => {
-    console.log(err);
-    return res.send({
-      ok: false,
-      error: err
-    })
-  })
+  app.use(ErrorHandlerMiddleware);
 
   server.listen(port, () => {
     console.log(`Listening on port ${port}`);

@@ -3,7 +3,7 @@ import Path from 'path'
 import Url from 'url'
 
 const homedir = Path.resolve()
-const routeFiles = ["user", "user-status", "message"]
+const routeFiles = ["user", "user-status", "message", "auth"]
 
 export default function (app) {
     return new Promise(async (resolve, reject) => {

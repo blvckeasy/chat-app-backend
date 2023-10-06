@@ -1,12 +1,11 @@
 import UserStatusService from '../user-status/user-status.service.js';
 import { UserService } from '../user/user.service.js'
-import { InternalServerError } from '../utils/error.js'
 import { SocketMessageRoutes } from './socket.message.js'
 
 
 export default async function SocketConnection(socket) {
     const { user } = socket;
-    if (!user) throw new InternalServerError(400, 'user not found!')
+    if (!user) throw new Error(400, 'user not found!')
 
     await UserService.updateUserSocketId(user.id, socket.id);
     await UserStatusService.insertUserStatus(user.id, "ONLINE");

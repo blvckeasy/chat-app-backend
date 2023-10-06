@@ -1,0 +1,16 @@
+ERROR ---------------------------------------- Fri Oct 06 2023 19:03:08 GMT+0000 (Coordinated Universal Time)
+    path: /signup
+    method: POST
+    headers: {"content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"27fe5b5a-f9ac-4af0-8b23-4fd91417c4cb","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"63"}
+    body: {"username":"blvckeasy","password":"islom1234"}
+    params: {}
+    query: {}
+    IP: ::1
+ERROR ---------------------------------------- Fri Oct 06 2023 19:03:09 GMT+0000 (Coordinated Universal Time)
+    path: /signup
+    method: POST
+    headers: {"content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"dd4489ce-4090-4e46-9d7d-e39d1109fbe6","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"63"}
+    body: {"username":"blvckeasy","password":"islom1234"}
+    params: {}
+    query: {}
+    IP: ::1
