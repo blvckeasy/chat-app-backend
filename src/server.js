@@ -1,13 +1,10 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-
-
 import socketMiddleware from './socket/socket.middleware.js'
 import SocketConnection from './socket/socket.connection.js'
 import Routes from './routes.js';
 import { ErrorHandlerMiddleware, apiMiddlewares } from './apiMiddleware.js';
-
 
 
 async function bootstrap() {
