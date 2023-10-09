@@ -20,12 +20,28 @@ export default class MessageService {
     }
 
     static async getMessage(message_id) {
-        if (!message_id) throw new InvalidDataError(404, "Message_id is require!", "message_id");
+        if (!message_id) throw new InvalidDataError(500, "Message_id is require!", "message_id");
     
         const foundMessage = await fetch(`
             SELECT * FROM MESSAGES WHERE id = $1 and deleted_at IS NULL;
         `, message_id);
         return foundMessage;
+    }
+
+    static async getLastMessage(userID_1, userID_2) {
+        if (!userID_1) throw new InvalidDataError(500, "userID1 is require!", "from_user_id");
+        if (!userID_2) throw new InvalidDataError(500, "userID2 is require!", "from_user_id");
+
+        const foundMessage = await fetch(`
+                SELECT * FROM MESSAGES 
+                WHERE 
+                    from_user_id = $1 AND to_user_id = $2 OR
+                    from_user_id = $2 AND to_user_id = $1
+                ORDER BY CREATED_AT DESC
+                LIMIT 1;
+        `, userID_1, userID_2);
+
+        return foundMessage
     }
 
     static async postMessage (fromUserId, toUserId, message) {

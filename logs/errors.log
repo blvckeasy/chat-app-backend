@@ -14,3 +14,62 @@ ERROR ---------------------------------------- Fri Oct 06 2023 19:03:09 GMT+0000
     params: {}
     query: {}
     IP: ::1
+
+ERROR ---------------------------------------- Mon Oct 09 2023 12:28:48 GMT+0500 (Uzbekistan Standard Time)
+    path: /last
+    method: GET
+    headers: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicHJvZmlsZV9pbWdfdXJsIjoiNjVlOWE4YzAtZjkyYi00NTAyLWJhYjgtYmU5MzZlYWJiYzc0LmpwZyIsImZ1bGxfbmFtZSI6bnVsbCwidXNlcm5hbWUiOiJibHZja2Vhc3kiLCJiaW8iOm51bGwsImlhdCI6MTY5NjU5MzQ1MywiZXhwIjoxNzAxNzc3NDUzfQ.L5IkDoQy96EcXUo1AG_j00vWhlkbWRi2h95Lf6oy_Hk","content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"3f4f4f54-799e-4a6e-ae60-f652a8df648f","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"29"}
+    body: {"friend_user_id":1}
+    params: {}
+    query: {}
+    IP: ::1
+
+ERROR ---------------------------------------- Mon Oct 09 2023 12:29:25 GMT+0500 (Uzbekistan Standard Time)
+    path: /last
+    method: GET
+    headers: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicHJvZmlsZV9pbWdfdXJsIjoiNjVlOWE4YzAtZjkyYi00NTAyLWJhYjgtYmU5MzZlYWJiYzc0LmpwZyIsImZ1bGxfbmFtZSI6bnVsbCwidXNlcm5hbWUiOiJibHZja2Vhc3kiLCJiaW8iOm51bGwsImlhdCI6MTY5NjU5MzQ1MywiZXhwIjoxNzAxNzc3NDUzfQ.L5IkDoQy96EcXUo1AG_j00vWhlkbWRi2h95Lf6oy_Hk","content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"7507026d-121b-4908-bbbf-0861c69ffda5","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"29"}
+    body: {"friend_user_id":1}
+    params: {}
+    query: {}
+    IP: ::1
+    error: {}
+
+ERROR ---------------------------------------- Mon Oct 09 2023 12:29:44 GMT+0500 (Uzbekistan Standard Time)
+    path: /last
+    method: GET
+    headers: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicHJvZmlsZV9pbWdfdXJsIjoiNjVlOWE4YzAtZjkyYi00NTAyLWJhYjgtYmU5MzZlYWJiYzc0LmpwZyIsImZ1bGxfbmFtZSI6bnVsbCwidXNlcm5hbWUiOiJibHZja2Vhc3kiLCJiaW8iOm51bGwsImlhdCI6MTY5NjU5MzQ1MywiZXhwIjoxNzAxNzc3NDUzfQ.L5IkDoQy96EcXUo1AG_j00vWhlkbWRi2h95Lf6oy_Hk","content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"bb83cb7b-8aa0-4e31-b76d-c474f0dc95a0","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"29"}
+    body: {"friend_user_id":1}
+    params: {}
+    query: {}
+    IP: ::1
+    error: {}
+
+ERROR ---------------------------------------- Mon Oct 09 2023 12:31:38 GMT+0500 (Uzbekistan Standard Time)
+    path: /last
+    method: GET
+    headers: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicHJvZmlsZV9pbWdfdXJsIjoiNjVlOWE4YzAtZjkyYi00NTAyLWJhYjgtYmU5MzZlYWJiYzc0LmpwZyIsImZ1bGxfbmFtZSI6bnVsbCwidXNlcm5hbWUiOiJibHZja2Vhc3kiLCJiaW8iOm51bGwsImlhdCI6MTY5NjU5MzQ1MywiZXhwIjoxNzAxNzc3NDUzfQ.L5IkDoQy96EcXUo1AG_j00vWhlkbWRi2h95Lf6oy_Hk","content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"6a82ef73-dbff-4521-a294-97e424b8eb0b","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"27"}
+    body: {"friendUserID":1}
+    params: {}
+    query: {}
+    IP: ::1
+    error: {}
+
+ERROR ---------------------------------------- Mon Oct 09 2023 12:32:17 GMT+0500 (Uzbekistan Standard Time)
+    path: /last
+    method: GET
+    headers: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicHJvZmlsZV9pbWdfdXJsIjoiNjVlOWE4YzAtZjkyYi00NTAyLWJhYjgtYmU5MzZlYWJiYzc0LmpwZyIsImZ1bGxfbmFtZSI6bnVsbCwidXNlcm5hbWUiOiJibHZja2Vhc3kiLCJiaW8iOm51bGwsImlhdCI6MTY5NjU5MzQ1MywiZXhwIjoxNzAxNzc3NDUzfQ.L5IkDoQy96EcXUo1AG_j00vWhlkbWRi2h95Lf6oy_Hk","content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"290f9ed4-3587-4eb4-b61d-fa83555afeba","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"27"}
+    body: {"friendUserID":1}
+    params: {}
+    query: {}
+    IP: ::1
+    error: {"length":153,"name":"error","severity":"ОШИБКА","code":"42601","position":"242","file":"scan.l","line":"1245","routine":"scanner_yyerror"}
+
+ERROR ---------------------------------------- Mon Oct 09 2023 12:32:27 GMT+0500 (Uzbekistan Standard Time)
+    path: /last
+    method: GET
+    headers: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicHJvZmlsZV9pbWdfdXJsIjoiNjVlOWE4YzAtZjkyYi00NTAyLWJhYjgtYmU5MzZlYWJiYzc0LmpwZyIsImZ1bGxfbmFtZSI6bnVsbCwidXNlcm5hbWUiOiJibHZja2Vhc3kiLCJiaW8iOm51bGwsImlhdCI6MTY5NjU5MzQ1MywiZXhwIjoxNzAxNzc3NDUzfQ.L5IkDoQy96EcXUo1AG_j00vWhlkbWRi2h95Lf6oy_Hk","content-type":"application/json","user-agent":"PostmanRuntime/7.33.0","accept":"*/*","postman-token":"65524f34-9392-4374-b82c-b715c1787e3e","host":"localhost:8080","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"27"}
+    body: {"friendUserID":1}
+    params: {}
+    query: {}
+    IP: ::1
+    error: {"length":123,"name":"error","severity":"ОШИБКА","code":"42P02","position":"100","file":"parse_expr.c","line":"867","routine":"transformParamRef"}

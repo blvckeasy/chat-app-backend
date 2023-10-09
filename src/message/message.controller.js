@@ -1,4 +1,4 @@
-import { InvalidDataError, PaginationError, UserNotFoundError } from "../utils/error.js"
+import { InvalidDataError, PaginationError } from "../utils/error.js"
 import JWT from "../utils/jwt.js";
 import MessageService from "./message.servise.js"
 
@@ -23,6 +23,28 @@ export async function getMessages(req, res, next) {
         })    
     } catch (error) {
         next(error)
+    }
+}
+
+export async function getLastMessage(req, res, next) {
+    try {
+        const { friendUserID } = req.body;
+        const { token } = req.headers;
+
+        if (!token) throw new InvalidDataError(400, "Token is require!", "token"); 
+        if (!friendUserID) throw new InvalidDataError(400, "friendUserID is require!", "friendUserID");
+
+        const user = JWT.verify(token);
+
+        console.log(user.id, friendUserID);
+        const lastMessage = await MessageService.getLastMessage(user.id, friendUserID);
+
+        return res.send({
+            ok: true,
+            lastMessage,
+        })
+    } catch (error) {
+        next(error);
     }
 }
 

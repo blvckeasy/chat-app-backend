@@ -21,8 +21,8 @@ export function ErrorHandlerMiddleware (err, req, res, next) {
         error: err,
       })
     }
-    
-    const writer = Fs.createWriteStream(path.join(process.cwd(), "logs", "errors.log"), {
+    console.log(err);
+    const writer = Fs.createWriteStream(Path.join(process.cwd(), "logs", "errors.log"), {
       flags: 'a'
     })
     writer.write(`
@@ -34,6 +34,7 @@ ERROR ---------------------------------------- ${new Date()}
     params: ${JSON.stringify(req.params)}
     query: ${JSON.stringify(req.query)}
     IP: ${req.socket.remoteAddress}
+    error: ${JSON.stringify(err)}
 `)
 
     return res.send({
