@@ -5,6 +5,7 @@ import { generateFileName } from "../utils/generate.js";
 import JWT from "../utils/jwt.js";
 import { fetchAll } from "../utils/postgres.js"
 import { UserService } from "./user.service.js";
+import MessageService from '../message/message.servise.js'
 
 
 export async function uploadProfileImage (req, res, next) {
@@ -38,12 +39,18 @@ export async function getUsers (req, res, next) {
     const { token } = req.headers;
     if (!token) throw new TokenIsInvalid(400, "Token is required!");
 
-    const users = await UserService.getUsers();
-    const usersWithStatus = await Promise.all(users.map(async (user) => {
+    const USER = JWT.verify(token);
+
+    let users = await UserService.getUsers()
+    users = await Promise.all(users.filter((user) => user.id != USER.id))
+
+    let usersWithStatus = await Promise.all(users.map(async (user) => {
       const status = await UserStatusService.getUserLastStatus(user.id)
       delete status?.user_id;
 
       user.status = status;
+      user.lastMessage = await MessageService.getLastMessage(USER.id, user.id);
+
       return user;
     }));
 

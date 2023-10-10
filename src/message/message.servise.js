@@ -33,7 +33,7 @@ export default class MessageService {
         if (!userID_2) throw new InvalidDataError(500, "userID2 is require!", "from_user_id");
 
         const foundMessage = await fetch(`
-                SELECT * FROM MESSAGES 
+                SELECT id, message, from_user_id, to_user_id, created_at FROM MESSAGES 
                 WHERE 
                     from_user_id = $1 AND to_user_id = $2 OR
                     from_user_id = $2 AND to_user_id = $1
