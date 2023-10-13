@@ -33,7 +33,6 @@ export async function uploadProfileImage (req, res, next) {
   }
 }
 
-// in the future, it is possible to implement the function of excluding the last registered users to the first of the chat, as in Telegram.
 export async function getUsers (req, res, next) {
   try {
     const { token } = req.headers;

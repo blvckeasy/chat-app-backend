@@ -21,7 +21,7 @@ async function bootstrap() {
   await apiMiddlewares(app);
   await Routes(app);
 
-  app.get("/", (_, res) => {
+  app.get("/api/v1/", (_, res) => {
     return res.send({
       author: "blvckeasy",
       repo: "https://github.com/blvckeasy/"
