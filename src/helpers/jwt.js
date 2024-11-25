@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { JWT_CONFIG } from '../constants/index.js';
-import { TokenError } from '../errors/jwt.error.js'
+import { TokenError } from '../errors/jwt.error.js';
+
 
 export class JWT {
     static async sign (payload) {

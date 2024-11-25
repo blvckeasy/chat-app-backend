@@ -1,20 +1,18 @@
 import MessageModel from "../../database/models/message.model.js";
 import UserModel from "../../database/models/user.model.js";
 import { BaseError } from "../../errors/base.error.js";
+import { Utils } from "../../helpers/utils.js";
+
 
 export class MessageEvent {
-    socket;
-
-    constructor(io, socket) {
-        this.socket = socket;
-    }
-
-    newMessage = async (data) => {
+    newMessage = async (data, socket) => {
         try {
             const { to_user_id, message } = data;
-            const friend = (await UserModel.findById(to_user_id)).toObject();
+            if (!Utils.isValidObjectId(to_user_id)) throw new BaseError("Noto'g'ri id ishlatildi!");
 
-            const { user } = this.socket;
+
+            const { user } = socket;
+            const friend = (await UserModel.findById(to_user_id)).toObject();
 
             const newMessage = await MessageModel.create({
                 from_user_id: user.id,
@@ -22,19 +20,22 @@ export class MessageEvent {
                 message,
             });
 
-            this.socket.to(friend?.socket_id).emit("new:message", newMessage);
-            this.socket.emit("new:message", newMessage);
+            socket.to(friend?.socket_id).emit("new:message", newMessage);
+            socket.emit("new:message", newMessage);
 
         } catch (error) {
             console.log(error);
-            this.socket.emit("error", error);
+            socket.emit("error", error);
         }
     };
 
-    editMessage = async (data) => {
+    editMessage = async (data, socket) => {
         try {
             const { message_id, message } = data;
-            const { user } = this.socket;
+            const { user } = socket;
+
+            if (!Utils.isValidObjectId(message_id)) throw new BaseError("Noto'g'ri id ishlatildi!");
+            
 
             const foundMessage = (
                 await MessageModel.findOne({
@@ -54,19 +55,21 @@ export class MessageEvent {
                 await UserModel.findOne({ _id: updatedMessage.to_user_id })
             ).toObject();
 
-            this.socket.to(friend.socket_id).emit("edit:message", updatedMessage);
-            this.socket.emit("edit:message", updatedMessage);
+            socket.to(friend.socket_id).emit("edit:message", updatedMessage);
+            socket.emit("edit:message", updatedMessage);
 
         } catch (error) {
             console.log(error);
-            this.socket.emit("error", error);
+            socket.emit("error", error);
         }
     };
 
-    deleteMessage = async (data) => {
+    deleteMessage = async (data, socket) => {
         try {
             const { message_id } = data;
-            const { user } = this.socket;
+            const { user } = socket;
+
+            if (!Utils.isValidObjectId(message_id)) throw new BaseError("Noto'g'ri id ishlatildi!");
 
             const deletedMessage = (
                 await MessageModel.findOneAndDelete({
@@ -78,10 +81,10 @@ export class MessageEvent {
             if (!deletedMessage) throw new BaseError("Messageni o'chirib bo'lmadi!")
             const friend = await UserModel.findOne({ _id: deletedMessage.to_user_id });
 
-            this.socket.to(friend.socket_id).to(user.socket_id).emit("delete:message", deletedMessage);
+            socket.to(friend.socket_id).to(user.socket_id).emit("delete:message", deletedMessage);
         } catch (error) {
             console.log(error);
-            this.socket.emit("error", error);
+            socket.emit("error", error);
         }
     };
 }

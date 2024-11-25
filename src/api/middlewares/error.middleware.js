@@ -10,6 +10,7 @@ export async function errorHandlerMiddleware (error, req, res, next) {
         })
     }
 
+    console.log(error);
     return res.send({
         ok: false,
         message: "Voy nimadur xato bo'ldi.",

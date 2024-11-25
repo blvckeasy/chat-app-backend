@@ -27,9 +27,9 @@ export default async function webSocket (io) {
             socket.user = updatedUser;
             socket.broadcast.emit("user:connected", updatedUser);
 
-            socket.on("new:message", messageEvent.newMessage.bind(this))
-            socket.on("edit:message", messageEvent.editMessage.bind(this))
-            socket.on("delete:message", messageEvent.deleteMessage.bind(this))
+            socket.on("new:message", (data) => messageEvent.newMessage.bind(data, socket))
+            socket.on("edit:message", (data) => messageEvent.editMessage(data, socket))
+            socket.on("delete:message", (data) => messageEvent.deleteMessage(data, socket))
 
         } catch (error) {
             console.log(error);
