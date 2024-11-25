@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+import { MONGODB_CONFIG } from '../constants/index.js'
+
 
 export async function connectDatabase () {
-    const connection = await mongoose.connect("mongodb://127.0.0.1:27017/chat-app");
+    const connection = await mongoose.connect(MONGODB_CONFIG.uri);
     return connection;
 }

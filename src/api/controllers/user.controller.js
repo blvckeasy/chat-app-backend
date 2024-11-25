@@ -33,6 +33,7 @@ class UserController {
             res.send({
                 ok: true,
                 message: "Foydalanuvchi malumotlari muvofaqqiyatli topildi!",
+                data: foundUser,
                 token: {
                     accessToken,
                 }

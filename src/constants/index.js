@@ -7,3 +7,8 @@ export const JWT_CONFIG = {
     algorithm: process.env.JWT_TOKEN_ALGORITHM,
     accessTokenExpiresIn: 7 * 24 * 60 * 60,         // 7 kun intervali
 }
+
+
+export const MONGODB_CONFIG = {
+    uri: process.env.MONGODB_URI,
+}
