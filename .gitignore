@@ -1,0 +1,9 @@
+/node_modules
+
+uploads/*
+
+*-lock.json
+
+*.env
+!.env.example
+
