@@ -1,4 +1,4 @@
-import { validateObjectIds } from "../../helpers/validate.js";
+import { Utils } from "../../helpers/utils.js";
 
 
 export async function validateObjectIdMiddleware(req, _, next) {
@@ -9,7 +9,7 @@ export async function validateObjectIdMiddleware(req, _, next) {
             ...Object.values(req.body)
         ]
     
-        await validateObjectIds(IDs);        
+        Utils.validateObjectIDs(IDs);        
 
         next();
     } catch (error) {

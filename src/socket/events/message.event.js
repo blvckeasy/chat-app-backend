@@ -10,7 +10,6 @@ export class MessageEvent {
             const { to_user_id, message } = data;
             if (!Utils.isValidObjectId(to_user_id)) throw new BaseError("Noto'g'ri id ishlatildi!");
 
-
             const { user } = socket;
             const friend = (await UserModel.findById(to_user_id)).toObject();
 
@@ -35,7 +34,6 @@ export class MessageEvent {
             const { user } = socket;
 
             if (!Utils.isValidObjectId(message_id)) throw new BaseError("Noto'g'ri id ishlatildi!");
-            
 
             const foundMessage = (
                 await MessageModel.findOne({

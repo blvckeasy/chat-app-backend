@@ -6,7 +6,9 @@ import { validateObjectIdMiddleware } from "../middlewares/validator.middleware.
 const router = Router();
 const messageController = new MessageController();
 
+
 router.get("/:userId", validateObjectIdMiddleware, (req, res, next) => messageController.getAllMessages(req, res, next))
+
 
 export default {
     path: "/messages",
