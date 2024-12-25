@@ -2,9 +2,11 @@ import express from 'express'
 import http from 'http'
 import { Server } from 'socket.io'
 import { connectDatabase } from './database/index.js';
-import setupRoutes from './api/routes/index.js'
 import { errorHandlerMiddleware } from './api/middlewares/error.middleware.js';
+import setupRoutes from './api/routes/index.js'
 import webSocket from './socket/index.js';
+import cors from 'cors';
+import { join } from 'path';
 
 async function bootstrap () {
     const PORT = process.env.PORT || 3000;
@@ -16,7 +18,11 @@ async function bootstrap () {
         },
     });
 
+    app.use(cors({
+        origin: "*"
+    }))
     app.use(express.json())
+    app.use("/imgs", express.static(join(process.cwd(), 'uploads')))
 
     await connectDatabase();
     await setupRoutes(app);

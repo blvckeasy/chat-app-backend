@@ -7,7 +7,7 @@ const router = Router();
 const messageController = new MessageController();
 
 
-router.get("/:userId", validateObjectIdMiddleware, (req, res, next) => messageController.getAllMessages(req, res, next))
+router.get("/:to_user_id", validateObjectIdMiddleware, (req, res, next) => messageController.getAllMessages(req, res, next))
 
 
 export default {

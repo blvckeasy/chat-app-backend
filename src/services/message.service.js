@@ -3,13 +3,10 @@ import MessageModel from "../database/models/message.model.js"
 class MessageService {
     constructor () {}
 
-    async get(userId) {
-        const foundedMessages = await MessageModel.find({ 
-            $or: userId ? [
-                { from_user_id: userId },
-                { to_user_id:   userId },
-            ]: []
-        }).sort({ sended_time: 1 });
+    async get(filter) {
+        const foundedMessages = await MessageModel
+        .find(filter)
+        .sort({ sended_time: 1 });
         
         return foundedMessages;
     }

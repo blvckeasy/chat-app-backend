@@ -1,14 +1,23 @@
 import { BaseError } from '../../errors/base.error.js';
 import { UserService } from '../../services/user.service.js';
 import { JWT } from '../../helpers/jwt.js';
+import { TokenError } from '../../errors/jwt.error.js';
 
 class UserController {
     #userService = new UserService();   
 
     async getAllUsers (req, res, next) {
         try {
+            const token = req.headers.token;
+            if (!token) throw new TokenError("Ushbu route uchun token majburiy!");
+    
+            const parsedToken = await JWT.verify(token); 
+            const found_user_id = parsedToken._id;
+
             const { page, limit } = req.query;
-            const users = await this.#userService.get({ page, limit }); 
+            const users = (await this.#userService.get({ page, limit })).filter((user) => {
+                return user._id != found_user_id;
+            });
 
             res.send({
                 ok: true,
@@ -45,8 +54,9 @@ class UserController {
 
     async signup (req, res, next) {
         try {
+
             const userAgent = req.get("User-Agent");
-            const { filename: profile_img_path } = req.file;
+            const { filename: profile_img_path } = req.file || {};  
             const { username, password, fullname } = req.body;
 
             const foundUser = await this.#userService.getOne({ username });

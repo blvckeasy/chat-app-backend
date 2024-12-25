@@ -1,4 +1,6 @@
-export class TokenError extends Error {
+import { BaseError } from "./base.error.js";
+
+export class TokenError extends BaseError {
     code = -20000;
     message;
     name;

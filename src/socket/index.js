@@ -1,17 +1,18 @@
 import UserModel from "../database/models/user.model.js";
-import { BaseError } from "../errors/base.error.js";
+import { BaseError, InternalServerError } from "../errors/base.error.js";
+import { TokenError } from "../errors/jwt.error.js";
 import { JWT } from "../helpers/jwt.js";
 import { MessageEvent } from './events/message.event.js'
 
 
 export default async function webSocket (io) {    
     io.on("connection", async (socket) => {
-        const messageEvent = new MessageEvent(socket);
+        const messageEvent = new MessageEvent();
         try {
             const socket_id = socket.id;
             const token = socket.handshake.headers?.token;
 
-            if (!token) throw new BaseError("Token is required!" )
+            if (!token) throw new TokenError("Token is required!" )
 
             const parsedToken = await JWT.verify(token);
             const user = (await UserModel.find({ _id: parsedToken._id }))[0];
@@ -27,18 +28,21 @@ export default async function webSocket (io) {
             socket.user = updatedUser;
             socket.broadcast.emit("user:connected", updatedUser);
 
-            socket.on("new:message", (data) => messageEvent.newMessage.bind(data, socket))
-            socket.on("edit:message", (data) => messageEvent.editMessage(data, socket))
-            socket.on("delete:message", (data) => messageEvent.deleteMessage(data, socket))
+            socket.on("new:message", (data) => messageEvent.newMessage(data, socket));
+            socket.on("edit:message", (data) => messageEvent.editMessage(data, socket));
+            socket.on("delete:message", (data) => messageEvent.deleteMessage(data, socket));
 
         } catch (error) {
-            console.log(error);
-            socket.emit('error', error);
+            if (error instanceof BaseError) {
+                socket.emit('error', error);
+                return;
+            }
+            socket.emit('error', new InternalServerError());
         }
 
 
         socket.on("disconnect", () => {
-            socket.broadcast.emit("user:disconnected", user._id);
+            socket.broadcast.emit("user:disconnected", socket.user?._id);
         })
     })
 }

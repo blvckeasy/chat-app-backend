@@ -9,7 +9,7 @@ export async function errorHandlerMiddleware (error, req, res, next) {
             name: error.constructor.name
         })
     }
-
+    
     console.log(error);
     return res.send({
         ok: false,
